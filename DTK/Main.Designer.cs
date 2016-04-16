@@ -33,7 +33,10 @@
             "000400000010d200",
             "[REDACTED]",
             "USA",
-            "True"}, -1);
+            "1024",
+            "eShop",
+            "Vblank Entertainment",
+            "CTR-JRXE"}, -1);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.locationBox = new System.Windows.Forms.TextBox();
             this.browseButton = new System.Windows.Forms.Button();
@@ -42,7 +45,10 @@
             this.titleID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.titleKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.region = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.isLegit = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.size = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.publisher = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.serial = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // locationBox
@@ -51,7 +57,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.locationBox.Location = new System.Drawing.Point(12, 12);
             this.locationBox.Name = "locationBox";
-            this.locationBox.Size = new System.Drawing.Size(460, 20);
+            this.locationBox.Size = new System.Drawing.Size(663, 20);
             this.locationBox.TabIndex = 1;
             this.locationBox.Text = "C:\\Users\\justy\\Desktop\\DTK\\decTitleKeys.bin";
             this.locationBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
@@ -59,7 +65,7 @@
             // browseButton
             // 
             this.browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.browseButton.Location = new System.Drawing.Point(478, 12);
+            this.browseButton.Location = new System.Drawing.Point(681, 12);
             this.browseButton.Name = "browseButton";
             this.browseButton.Size = new System.Drawing.Size(75, 20);
             this.browseButton.TabIndex = 2;
@@ -77,14 +83,17 @@
             this.titleID,
             this.titleKey,
             this.region,
-            this.isLegit});
+            this.size,
+            this.type,
+            this.publisher,
+            this.serial});
             this.titleView.FullRowSelect = true;
             this.titleView.GridLines = true;
             this.titleView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1});
             this.titleView.Location = new System.Drawing.Point(12, 38);
             this.titleView.Name = "titleView";
-            this.titleView.Size = new System.Drawing.Size(541, 211);
+            this.titleView.Size = new System.Drawing.Size(744, 211);
             this.titleView.TabIndex = 3;
             this.titleView.UseCompatibleStateImageBehavior = false;
             this.titleView.View = System.Windows.Forms.View.Details;
@@ -107,18 +116,33 @@
             // region
             // 
             this.region.Text = "Region";
-            this.region.Width = 46;
+            this.region.Width = 49;
             // 
-            // isLegit
+            // size
             // 
-            this.isLegit.Text = "Is Legit?";
-            this.isLegit.Width = 55;
+            this.size.Text = "Size";
+            this.size.Width = 36;
+            // 
+            // type
+            // 
+            this.type.Text = "Type";
+            this.type.Width = 43;
+            // 
+            // publisher
+            // 
+            this.publisher.Text = "Publisher";
+            this.publisher.Width = 113;
+            // 
+            // serial
+            // 
+            this.serial.Text = "Serial";
+            this.serial.Width = 64;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(565, 261);
+            this.ClientSize = new System.Drawing.Size(768, 261);
             this.Controls.Add(this.titleView);
             this.Controls.Add(this.browseButton);
             this.Controls.Add(this.locationBox);
@@ -138,7 +162,10 @@
         private System.Windows.Forms.ColumnHeader titleID;
         private System.Windows.Forms.ColumnHeader titleKey;
         private System.Windows.Forms.ColumnHeader region;
-        private System.Windows.Forms.ColumnHeader isLegit;
+        private System.Windows.Forms.ColumnHeader type;
+        private System.Windows.Forms.ColumnHeader size;
+        private System.Windows.Forms.ColumnHeader publisher;
+        private System.Windows.Forms.ColumnHeader serial;
     }
 }
 

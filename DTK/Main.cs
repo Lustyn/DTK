@@ -5,18 +5,113 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace DTK
 {
     public partial class Main : Form
     {
+        private const string _3dsDbPath = "3dsreleases.xml";
+
         public Main()
         {
             InitializeComponent();
             titleView.Items.Clear();
+
+            if (!File.Exists(_3dsDbPath))
+            {
+                Console.WriteLine("3DS titles database not found! Downloading...");
+                Download3DSDatabase();
+            }
+
+
+        }
+
+
+        private static void Download3DSDatabase()
+        {
+            const string dbAddress = @"http://3dsdb.com/xml.php";
+            using (var client = new WebClient())
+            {
+                try
+                {
+                    client.DownloadFile(dbAddress, _3dsDbPath);
+                }
+                catch (WebException ex)
+                {
+                    MessageBox.Show("Could not download the 3ds database. Error: " + ex.Message);
+                }
+            }
+
+            MessageBox.Show("3DS database downloaded!");
+        }
+
+        private static List<Nintendo3DSRelease> ParseTicketsFrom3dsDb(List<Nintendo3DSRelease> parsedTickets)
+        {
+            Console.Write("Checking Title IDs against 3dsdb.com database");
+            var xmlFile = XElement.Load(_3dsDbPath);
+            List<Nintendo3DSRelease> foundTitles = new List<Nintendo3DSRelease>();
+
+
+            foreach (XElement titleInfo in xmlFile.Nodes())
+            {
+                Func<string, string> titleData = tag => titleInfo.Element(tag).Value.Trim();
+                var titleId = titleData("titleid");
+                
+
+                var matchedTitles =
+                    parsedTickets.Where(ticket => string.Compare(ticket.TitleId, titleId, StringComparison.OrdinalIgnoreCase) == 0)
+                        .ToList();
+
+                foreach (var title in matchedTitles)
+                {
+                    var publisher = titleData("publisher");
+                    var titlename = titleData("name");
+                    var region = titleData("region");
+                    var serial = titleData("serial");
+
+                    string type;
+
+                    switch (int.Parse(titleData("type")))
+                    {
+                        case 1:
+                            type = "3DS Game";
+                            break;
+                        case 2:
+                            type = "3DS Demo";
+                            break;
+                        case 3:
+                            type = "3DSWare";
+                            break;
+                        case 4:
+                            type = "EShop";
+                            break;
+                        default:
+                            type = "Unknown";
+                            break;
+                    }
+
+                    var sizeInMegabytes = Convert.ToInt32(decimal.Parse(titleData("trimmedsize")) / (int)Math.Pow(2, 20));
+
+                    var foundTicket = new Nintendo3DSRelease(
+                        titlename,
+                        publisher,
+                        region,
+                        type,
+                        serial,
+                        titleId,
+                        title.TitleKey,
+                        sizeInMegabytes);
+
+                    foundTitles.Add(foundTicket);
+                }
+            }
+
+            return foundTitles;
         }
 
         private static Dictionary<string, string> ParseDecTitleKeysBin(String DecryptedTitleKeysPath)
@@ -65,10 +160,20 @@ namespace DTK
                 this.locationBox.Text = openFileDialog1.FileName;
                 this.titleView.Items.Clear();
                 Dictionary<string, string> titleDic = ParseDecTitleKeysBin(openFileDialog1.FileName);
+                List<Nintendo3DSRelease> titleList = new List<Nintendo3DSRelease>();
 
-                foreach (KeyValuePair<string, string> entry in myDic)
+                foreach (KeyValuePair<string, string> entry in titleDic)
                 {
-                    
+                    titleList.Add(new Nintendo3DSRelease(entry.Key, entry.Value));
+                }
+
+                List<Nintendo3DSRelease> parsedTitles = ParseTicketsFrom3dsDb(titleList);
+
+                foreach (Nintendo3DSRelease entry in parsedTitles)
+                {
+                    string[] row = { entry.Name, entry.TitleId, entry.TitleKey, entry.Region, entry.SizeInMegabytes+"MB", entry.Type, entry.Publisher, entry.Serial};
+                    var newEntry = new ListViewItem(row);
+                    this.titleView.Items.Add(newEntry);
                 }
             }
         }
