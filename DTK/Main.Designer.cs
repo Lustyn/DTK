@@ -57,9 +57,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.locationBox.Location = new System.Drawing.Point(12, 12);
             this.locationBox.Name = "locationBox";
+            this.locationBox.ReadOnly = true;
             this.locationBox.Size = new System.Drawing.Size(663, 20);
             this.locationBox.TabIndex = 1;
-            this.locationBox.Text = "C:\\Users\\justy\\Desktop\\DTK\\decTitleKeys.bin";
             this.locationBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // browseButton
