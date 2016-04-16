@@ -49,16 +49,19 @@
             this.type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.publisher = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.serial = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.searchBox = new System.Windows.Forms.TextBox();
+            this.isEncrypted = new System.Windows.Forms.CheckBox();
+            this.countLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // locationBox
             // 
             this.locationBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.locationBox.Location = new System.Drawing.Point(12, 12);
+            this.locationBox.Location = new System.Drawing.Point(182, 12);
             this.locationBox.Name = "locationBox";
             this.locationBox.ReadOnly = true;
-            this.locationBox.Size = new System.Drawing.Size(663, 20);
+            this.locationBox.Size = new System.Drawing.Size(493, 20);
             this.locationBox.TabIndex = 1;
             this.locationBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -93,10 +96,11 @@
             listViewItem1});
             this.titleView.Location = new System.Drawing.Point(12, 38);
             this.titleView.Name = "titleView";
-            this.titleView.Size = new System.Drawing.Size(744, 211);
+            this.titleView.Size = new System.Drawing.Size(744, 202);
             this.titleView.TabIndex = 3;
             this.titleView.UseCompatibleStateImageBehavior = false;
             this.titleView.View = System.Windows.Forms.View.Details;
+            this.titleView.ItemActivate += new System.EventHandler(this.titleView_ItemActivate);
             // 
             // titleName
             // 
@@ -138,11 +142,45 @@
             this.serial.Text = "Serial";
             this.serial.Width = 64;
             // 
+            // searchBox
+            // 
+            this.searchBox.Location = new System.Drawing.Point(13, 12);
+            this.searchBox.Name = "searchBox";
+            this.searchBox.Size = new System.Drawing.Size(163, 20);
+            this.searchBox.TabIndex = 4;
+            this.searchBox.TextChanged += new System.EventHandler(this.searchBox_TextChanged);
+            // 
+            // isEncrypted
+            // 
+            this.isEncrypted.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.isEncrypted.AutoSize = true;
+            this.isEncrypted.Location = new System.Drawing.Point(646, 245);
+            this.isEncrypted.Name = "isEncrypted";
+            this.isEncrypted.Size = new System.Drawing.Size(110, 17);
+            this.isEncrypted.TabIndex = 5;
+            this.isEncrypted.Text = "encTitleKeys.bin?";
+            this.isEncrypted.UseVisualStyleBackColor = true;
+            this.isEncrypted.CheckedChanged += new System.EventHandler(this.isEncrypted_CheckedChanged);
+            // 
+            // countLabel
+            // 
+            this.countLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.countLabel.AutoSize = true;
+            this.countLabel.Location = new System.Drawing.Point(12, 246);
+            this.countLabel.Name = "countLabel";
+            this.countLabel.Size = new System.Drawing.Size(75, 13);
+            this.countLabel.TabIndex = 6;
+            this.countLabel.Text = "1 titles loaded.";
+            this.countLabel.Click += new System.EventHandler(this.countLabel_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(768, 261);
+            this.ClientSize = new System.Drawing.Size(768, 268);
+            this.Controls.Add(this.countLabel);
+            this.Controls.Add(this.isEncrypted);
+            this.Controls.Add(this.searchBox);
             this.Controls.Add(this.titleView);
             this.Controls.Add(this.browseButton);
             this.Controls.Add(this.locationBox);
@@ -166,6 +204,9 @@
         private System.Windows.Forms.ColumnHeader size;
         private System.Windows.Forms.ColumnHeader publisher;
         private System.Windows.Forms.ColumnHeader serial;
+        private System.Windows.Forms.TextBox searchBox;
+        private System.Windows.Forms.CheckBox isEncrypted;
+        private System.Windows.Forms.Label countLabel;
     }
 }
 

@@ -16,11 +16,13 @@ namespace DTK
     public partial class Main : Form
     {
         private const string _3dsDbPath = "3dsreleases.xml";
+        private const string _FunKeyCIAPath = "FunKeyCIA.py";
 
         public Main()
         {
             InitializeComponent();
             titleView.Items.Clear();
+            countLabel.Text = "0 items loaded.";
 
             if (!File.Exists(_3dsDbPath))
             {
@@ -28,6 +30,10 @@ namespace DTK
                 Download3DSDatabase();
             }
 
+            if (!File.Exists(_FunKeyCIAPath))
+            {
+                MessageBox.Show("Could not find FunKeyCIA.py. Downloading from CDN will not work");
+            }
 
         }
 
@@ -47,12 +53,12 @@ namespace DTK
                 }
             }
 
-            MessageBox.Show("3DS database downloaded!");
+            Console.WriteLine("3DS database downloaded!");
         }
 
         private static List<Nintendo3DSRelease> ParseTicketsFrom3dsDb(List<Nintendo3DSRelease> parsedTickets)
         {
-            Console.Write("Checking Title IDs against 3dsdb.com database");
+            Console.WriteLine("Checking Title IDs against 3dsdb.com database");
             var xmlFile = XElement.Load(_3dsDbPath);
             List<Nintendo3DSRelease> foundTitles = new List<Nintendo3DSRelease>();
 
@@ -157,6 +163,10 @@ namespace DTK
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 // Assign the cursor in the Stream to the Form's Cursor property.
+                if (openFileDialog1.SafeFileName == "encTitleKeys.bin")
+                {
+                    isEncrypted.Checked = true;
+                }
                 this.locationBox.Text = openFileDialog1.FileName;
                 this.titleView.Items.Clear();
                 Dictionary<string, string> titleDic = ParseDecTitleKeysBin(openFileDialog1.FileName);
@@ -168,7 +178,7 @@ namespace DTK
                 }
 
                 List<Nintendo3DSRelease> parsedTitles = ParseTicketsFrom3dsDb(titleList);
-
+                countLabel.Text = parsedTitles.Count.ToString() + " titles loaded.";
                 foreach (Nintendo3DSRelease entry in parsedTitles)
                 {
                     string[] row = { entry.Name, entry.TitleId, entry.TitleKey, entry.Region, entry.SizeInMegabytes+"MB", entry.Type, entry.Publisher, entry.Serial};
@@ -176,6 +186,34 @@ namespace DTK
                     this.titleView.Items.Add(newEntry);
                 }
             }
+        }
+
+        private void titleView_ItemActivate(object sender, EventArgs e)
+        {
+            if (isEncrypted.Checked)
+            {
+                foreach (ListViewItem item in this.titleView.SelectedItems)
+                {
+                    //MessageBox.Show(item.SubItems[1].Text);
+                    var strCmdText = "/k python FunKeyCIA.py -title " + item.SubItems[1].Text + " -key " + item.SubItems[2].Text;
+                    System.Diagnostics.Process.Start("CMD.exe", strCmdText);
+                }
+            }
+        }
+
+        private void searchBox_TextChanged(object sender, EventArgs e)
+        {
+            titleView.TopItem = titleView.FindItemWithText(searchBox.Text, true, 0, true);
+        }
+
+        private void isEncrypted_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void countLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
