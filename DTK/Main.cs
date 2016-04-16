@@ -163,7 +163,7 @@ namespace DTK
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 // Assign the cursor in the Stream to the Form's Cursor property.
-                if (openFileDialog1.SafeFileName == "encTitleKeys.bin")
+                if (openFileDialog1.SafeFileName.Contains("encTitleKeys"))
                 {
                     isEncrypted.Checked = true;
                 }
