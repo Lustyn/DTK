@@ -78,6 +78,7 @@
             this.titleKey,
             this.region,
             this.isLegit});
+            this.titleView.FullRowSelect = true;
             this.titleView.GridLines = true;
             this.titleView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1});
