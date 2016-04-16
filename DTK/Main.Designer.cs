@@ -28,63 +28,99 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            "Retro City Rampage: DX",
+            "000400000010d200",
+            "[REDACTED]",
+            "USA",
+            "True"}, -1);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            this.locationBox = new System.Windows.Forms.TextBox();
+            this.browseButton = new System.Windows.Forms.Button();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.titleName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.titleID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.titleKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.region = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.isLegit = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
-            // tableLayoutPanel1
+            // locationBox
             // 
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 38);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(533, 211);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.locationBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.locationBox.Location = new System.Drawing.Point(12, 12);
+            this.locationBox.Name = "locationBox";
+            this.locationBox.Size = new System.Drawing.Size(460, 20);
+            this.locationBox.TabIndex = 1;
+            this.locationBox.Text = "C:\\Users\\justy\\Desktop\\DTK\\decTitleKeys.bin";
+            this.locationBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
-            // textBox1
+            // browseButton
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(452, 20);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.browseButton.Location = new System.Drawing.Point(478, 12);
+            this.browseButton.Name = "browseButton";
+            this.browseButton.Size = new System.Drawing.Size(75, 20);
+            this.browseButton.TabIndex = 2;
+            this.browseButton.Text = "Browse";
+            this.browseButton.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // listView1
             // 
-            this.button1.Location = new System.Drawing.Point(470, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 20);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.titleName,
+            this.titleID,
+            this.titleKey,
+            this.region,
+            this.isLegit});
+            this.listView1.GridLines = true;
+            this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1});
+            this.listView1.Location = new System.Drawing.Point(12, 38);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(541, 211);
+            this.listView1.TabIndex = 3;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            // 
+            // titleName
+            // 
+            this.titleName.Text = "Title Name";
+            this.titleName.Width = 126;
+            // 
+            // titleID
+            // 
+            this.titleID.Text = "Title ID";
+            this.titleID.Width = 108;
+            // 
+            // titleKey
+            // 
+            this.titleKey.Text = "Title Key";
+            this.titleKey.Width = 201;
+            // 
+            // region
+            // 
+            this.region.Text = "Region";
+            this.region.Width = 46;
+            // 
+            // isLegit
+            // 
+            this.isLegit.Text = "Is Legit?";
+            this.isLegit.Width = 55;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(557, 261);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.ClientSize = new System.Drawing.Size(565, 261);
+            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.browseButton);
+            this.Controls.Add(this.locationBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
             this.Text = "D.T.K. - D.T.K. Takes Keys";
             this.ResumeLayout(false);
@@ -93,10 +129,14 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox locationBox;
+        private System.Windows.Forms.Button browseButton;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ColumnHeader titleName;
+        private System.Windows.Forms.ColumnHeader titleID;
+        private System.Windows.Forms.ColumnHeader titleKey;
+        private System.Windows.Forms.ColumnHeader region;
+        private System.Windows.Forms.ColumnHeader isLegit;
     }
 }
 
