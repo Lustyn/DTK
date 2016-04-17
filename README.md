@@ -7,7 +7,7 @@ Currently it only shows basic data needed from your encTitleKeys file but you ca
 We aren't responsible if you use this for piracy. Use your own keys with this application.
 
 ## Requirements
-* **python** - Required for running FunKeyCIA
+* **python 2.7** - Required for running FunKeyCIA
 * **encTitleKeys** - From your console
 * **.NET Framework 4.5.2** - You should have this already
 * **Working Internet Connection** - *duh*
