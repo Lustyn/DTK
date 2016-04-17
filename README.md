@@ -3,6 +3,9 @@ DTK is an application that downloads games from Nintendo's CDN using [FunKeyCIA]
 
 Currently it only shows basic data needed from your encTitleKeys file but you can already download using it.
 
+## Warning
+We aren't responsible if you use this for piracy. Use your own keys with this application.
+
 ## Requirements
 * **python** - Required for running FunKeyCIA
 * **encTitleKeys** - From your console
