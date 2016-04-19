@@ -52,6 +52,7 @@
             this.searchBox = new System.Windows.Forms.TextBox();
             this.isEncrypted = new System.Windows.Forms.CheckBox();
             this.countLabel = new System.Windows.Forms.Label();
+            this.loadKeyDB = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // locationBox
@@ -63,14 +64,13 @@
             this.locationBox.ReadOnly = true;
             this.locationBox.Size = new System.Drawing.Size(493, 20);
             this.locationBox.TabIndex = 1;
-            this.locationBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // browseButton
             // 
             this.browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.browseButton.Location = new System.Drawing.Point(681, 12);
+            this.browseButton.Location = new System.Drawing.Point(681, 9);
             this.browseButton.Name = "browseButton";
-            this.browseButton.Size = new System.Drawing.Size(75, 20);
+            this.browseButton.Size = new System.Drawing.Size(75, 23);
             this.browseButton.TabIndex = 2;
             this.browseButton.Text = "Browse";
             this.browseButton.UseVisualStyleBackColor = true;
@@ -96,7 +96,7 @@
             listViewItem1});
             this.titleView.Location = new System.Drawing.Point(12, 38);
             this.titleView.Name = "titleView";
-            this.titleView.Size = new System.Drawing.Size(744, 202);
+            this.titleView.Size = new System.Drawing.Size(744, 206);
             this.titleView.TabIndex = 3;
             this.titleView.UseCompatibleStateImageBehavior = false;
             this.titleView.View = System.Windows.Forms.View.Details;
@@ -154,7 +154,7 @@
             // 
             this.isEncrypted.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.isEncrypted.AutoSize = true;
-            this.isEncrypted.Location = new System.Drawing.Point(646, 245);
+            this.isEncrypted.Location = new System.Drawing.Point(646, 249);
             this.isEncrypted.Name = "isEncrypted";
             this.isEncrypted.Size = new System.Drawing.Size(110, 17);
             this.isEncrypted.TabIndex = 5;
@@ -166,18 +166,29 @@
             // 
             this.countLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.countLabel.AutoSize = true;
-            this.countLabel.Location = new System.Drawing.Point(12, 246);
+            this.countLabel.Location = new System.Drawing.Point(12, 250);
             this.countLabel.Name = "countLabel";
             this.countLabel.Size = new System.Drawing.Size(75, 13);
             this.countLabel.TabIndex = 6;
             this.countLabel.Text = "1 titles loaded.";
             this.countLabel.Click += new System.EventHandler(this.countLabel_Click);
             // 
+            // loadKeyDB
+            // 
+            this.loadKeyDB.Location = new System.Drawing.Point(560, 245);
+            this.loadKeyDB.Name = "loadKeyDB";
+            this.loadKeyDB.Size = new System.Drawing.Size(80, 23);
+            this.loadKeyDB.TabIndex = 8;
+            this.loadKeyDB.Text = "Load Key DB";
+            this.loadKeyDB.UseVisualStyleBackColor = true;
+            this.loadKeyDB.Click += new System.EventHandler(this.loadKeyDB_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(768, 268);
+            this.ClientSize = new System.Drawing.Size(768, 272);
+            this.Controls.Add(this.loadKeyDB);
             this.Controls.Add(this.countLabel);
             this.Controls.Add(this.isEncrypted);
             this.Controls.Add(this.searchBox);
@@ -207,6 +218,7 @@
         private System.Windows.Forms.TextBox searchBox;
         private System.Windows.Forms.CheckBox isEncrypted;
         private System.Windows.Forms.Label countLabel;
+        private System.Windows.Forms.Button loadKeyDB;
     }
 }
 

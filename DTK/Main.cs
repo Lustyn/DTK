@@ -16,7 +16,10 @@ namespace DTK
     public partial class Main : Form
     {
         private const string _3dsDbPath = "3dsreleases.xml";
+        private const string _keyDbPath = "db.ebin";
+        private static string aaa = "***REMOVED***";
         private const string _FunKeyCIAPath = "FunKeyCIA.py";
+        private List<Nintendo3DSRelease> loadedTitles = new List<Nintendo3DSRelease>();
 
         public Main()
         {
@@ -54,6 +57,77 @@ namespace DTK
             }
 
             Console.WriteLine("3DS database downloaded!");
+        }
+
+        private static void DownloadKeyDatabase()
+        {
+            string dbAddress = Base64Decode(aaa);
+            using (var client = new WebClient())
+            {
+                try
+                {
+                    client.DownloadFile(dbAddress, _keyDbPath);
+                }
+                catch (WebException ex)
+                {
+                    MessageBox.Show("Could not download the key database. Error: " + ex.Message);
+                }
+            }
+
+            MessageBox.Show("Key database downloaded!");
+        }
+
+        private void LoadDB(string path, string safe_path)
+        {
+            if (safe_path.Contains("enc"))
+            {
+                isEncrypted.Checked = true;
+            }
+            else if (safe_path.Contains(".ebin"))
+            {
+                isEncrypted.Checked = true;
+            }
+            this.locationBox.Text = path;
+            this.titleView.Items.Clear();
+            Dictionary<string, string> titleDic = ParseDecTitleKeysBin(path);
+            List<Nintendo3DSRelease> titleList = new List<Nintendo3DSRelease>();
+
+            foreach (KeyValuePair<string, string> entry in titleDic)
+            {
+                titleList.Add(new Nintendo3DSRelease(entry.Key, entry.Value));
+            }
+
+            List<Nintendo3DSRelease> parsedTitles = ParseTicketsFrom3dsDb(titleList);
+            loadedTitles = parsedTitles;
+            countLabel.Text = parsedTitles.Count.ToString() + " titles loaded.";
+            foreach (Nintendo3DSRelease entry in parsedTitles)
+            {
+                string[] row = { entry.Name, entry.TitleId, entry.TitleKey, entry.Region, entry.SizeInMegabytes + "MB", entry.Type, entry.Publisher, entry.Serial };
+                var newEntry = new ListViewItem(row);
+                this.titleView.Items.Add(newEntry);
+            }
+        }
+
+        private void LoadKeyDatabase()
+        {
+            if (!File.Exists(_keyDbPath))
+            {
+                Console.WriteLine("Key database not found! Downloading...");
+                DownloadKeyDatabase();
+            }
+            LoadDB(_keyDbPath, _keyDbPath);
+        }
+
+        public static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
         private static List<Nintendo3DSRelease> ParseTicketsFrom3dsDb(List<Nintendo3DSRelease> parsedTickets)
@@ -115,7 +189,11 @@ namespace DTK
 
                     foundTitles.Add(foundTicket);
                 }
+
+
+
             }
+
 
             return foundTitles;
         }
@@ -145,46 +223,19 @@ namespace DTK
             return ticketsDictionary;
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void browseButton_Click(object sender, EventArgs e)
         {
             // Displays an OpenFileDialog so the user can select a Cursor.
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.Filter = "BIN files|*.bin";
-            openFileDialog1.Title = "Select a decTitleKeys.bin File";
+            openFileDialog1.Filter = "BIN files|*.bin|EBIN files|*.ebin|DBIN files|*.dbin|All files|*.*";
+            openFileDialog1.Title = "Select a title key database file";
 
             // Show the Dialog.
             // If the user clicked OK in the dialog and
             // a .CUR file was selected, open it.
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                // Assign the cursor in the Stream to the Form's Cursor property.
-                if (openFileDialog1.SafeFileName.Contains("encTitleKeys"))
-                {
-                    isEncrypted.Checked = true;
-                }
-                this.locationBox.Text = openFileDialog1.FileName;
-                this.titleView.Items.Clear();
-                Dictionary<string, string> titleDic = ParseDecTitleKeysBin(openFileDialog1.FileName);
-                List<Nintendo3DSRelease> titleList = new List<Nintendo3DSRelease>();
-
-                foreach (KeyValuePair<string, string> entry in titleDic)
-                {
-                    titleList.Add(new Nintendo3DSRelease(entry.Key, entry.Value));
-                }
-
-                List<Nintendo3DSRelease> parsedTitles = ParseTicketsFrom3dsDb(titleList);
-                countLabel.Text = parsedTitles.Count.ToString() + " titles loaded.";
-                foreach (Nintendo3DSRelease entry in parsedTitles)
-                {
-                    string[] row = { entry.Name, entry.TitleId, entry.TitleKey, entry.Region, entry.SizeInMegabytes+"MB", entry.Type, entry.Publisher, entry.Serial};
-                    var newEntry = new ListViewItem(row);
-                    this.titleView.Items.Add(newEntry);
-                }
+                LoadDB(openFileDialog1.FileName, openFileDialog1.SafeFileName);
             }
         }
 
@@ -194,7 +245,6 @@ namespace DTK
             {
                 foreach (ListViewItem item in this.titleView.SelectedItems)
                 {
-                    //MessageBox.Show(item.SubItems[1].Text);
                     var strCmdText = "/k python FunKeyCIA.py -title " + item.SubItems[1].Text + " -key " + item.SubItems[2].Text;
                     System.Diagnostics.Process.Start("CMD.exe", strCmdText);
                 }
@@ -203,7 +253,27 @@ namespace DTK
 
         private void searchBox_TextChanged(object sender, EventArgs e)
         {
-            titleView.TopItem = titleView.FindItemWithText(searchBox.Text, true, 0, true);
+            titleView.Items.Clear();
+            var searchTexts = searchBox.Text.ToLower().Split(' ');
+            foreach (Nintendo3DSRelease entry in loadedTitles)
+            {
+                var searchCount = 0;
+                foreach (string searchText in searchTexts)
+                {
+                    if (entry.Name.ToLower().Contains(searchText) | entry.TitleKey.ToLower().Contains(searchText) | entry.TitleId.ToLower().Contains(searchText) | entry.Region.ToLower().Contains(searchText) | (entry.SizeInMegabytes.ToString().ToLower() + "MB").Contains(searchText) | entry.Type.ToLower().Contains(searchText) | entry.Publisher.ToLower().Contains(searchText) | entry.Serial.ToLower().Contains(searchText))
+                    {
+                        searchCount++;
+                    }
+                }
+                if (searchCount >= searchTexts.Length)
+                {
+                    string[] row = { entry.Name, entry.TitleId, entry.TitleKey, entry.Region, entry.SizeInMegabytes + "MB", entry.Type, entry.Publisher, entry.Serial };
+                    var newEntry = new ListViewItem(row);
+                    this.titleView.Items.Add(newEntry);
+                }
+            }
+            titleView.Refresh();
+            titleView.Update();
         }
 
         private void isEncrypted_CheckedChanged(object sender, EventArgs e)
@@ -214,6 +284,11 @@ namespace DTK
         private void countLabel_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void loadKeyDB_Click(object sender, EventArgs e)
+        {
+            LoadKeyDatabase();
         }
     }
 }
