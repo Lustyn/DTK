@@ -16,11 +16,15 @@ namespace DTK
     public partial class Main : Form
     {
         private const string _3dsDbPath = "3dsreleases.xml";
-        private const string _keyDbPath = "db.ebin";
+        private static string _keyDBPath = "db.ebin";
         private const string _configPath = "config.xml";
         private static string aaa = "***REMOVED***";
         private static string _FunKeyCIAPath = "FunKeyCIA.py";
         private static string _pythonPath = "python";
+        private static string _autoLoadPath = "db.ebin";
+        private const string _makecdnciaPath = "make_cdn_cia.exe";
+        private const string _groovyCIAPath = "groovyreleases.xml";
+        private static bool _autoLoad = true;
         private List<Nintendo3DSRelease> loadedTitles = new List<Nintendo3DSRelease>();
 
         public Main()
@@ -28,6 +32,17 @@ namespace DTK
             InitializeComponent();
             titleView.Items.Clear();
             countLabel.Text = "0 items loaded.";
+
+            if (!File.Exists(_groovyCIAPath))
+            {
+                Console.WriteLine("3DS titles database not found! Downloading...");
+                DownloadGroovyCiaDatabase();
+            }
+
+            if (!File.Exists(_makecdnciaPath))
+            {
+                MessageBox.Show(_makecdnciaPath + " could not be found! FunKeyCIA will error!");
+            }
 
             if (!File.Exists(_3dsDbPath))
             {
@@ -37,13 +52,17 @@ namespace DTK
 
             if (!File.Exists(_FunKeyCIAPath))
             {
-                MessageBox.Show("Could not find FunKeyCIA.py. Downloading from CDN will not work");
+                Console.WriteLine("FunKeyCIA not found! Downloading...");
+                DownloadFunKeyCIA();
             }
             if (File.Exists(_configPath))
             {
                 Config loadedConfig = ParseConfig();
                 _pythonPath = loadedConfig.PythonPath;
                 _FunKeyCIAPath = loadedConfig.FunKeyCIAPath;
+                _keyDBPath = loadedConfig.keyDBPath;
+                _autoLoad = loadedConfig.autoLoad;
+                _autoLoadPath = loadedConfig.autoLoadPath;
             } else
             {
                 Config cfg = new Config();
@@ -54,6 +73,22 @@ namespace DTK
 
                 writer.Serialize(file, cfg);
                 file.Close();
+            }
+
+            if (_autoLoad & File.Exists(_autoLoadPath))
+            {
+                LoadDB(_autoLoadPath, _autoLoadPath);
+            } else if (!File.Exists(_autoLoadPath))
+            {
+                if (_autoLoadPath == _keyDBPath)
+                {
+                    DownloadKeyDatabase();
+                    LoadDB(_autoLoadPath, _autoLoadPath);
+                }
+                else
+                {
+                    MessageBox.Show("autoLoad was enabled but the file does not exist.");
+                }
             }
         }
 
@@ -76,6 +111,42 @@ namespace DTK
             Console.WriteLine("3DS database downloaded!");
         }
 
+        private static void DownloadFunKeyCIA()
+        {
+            const string dbAddress = @"https://github.com/llakssz/FunKeyCIA/raw/master/FunKeyCIA.py";
+            using (var client = new WebClient())
+            {
+                try
+                {
+                    client.DownloadFile(dbAddress, _FunKeyCIAPath);
+                }
+                catch (WebException ex)
+                {
+                    MessageBox.Show("Could not download FunKeyCIA. Error: " + ex.Message);
+                }
+            }
+
+            Console.WriteLine("FunKeyCIA downloaded!");
+        }
+
+        private static void DownloadGroovyCiaDatabase()
+        {
+            const string dbAddress = "http://ptrk25.github.io/GroovyFX/database/community.xml";
+            using (var client = new WebClient())
+            {
+                try
+                {
+                    client.DownloadFile(dbAddress, _groovyCIAPath);
+                }
+                catch (WebException ex)
+                {
+                    Console.WriteLine("Could not download the GroovyCIA database. Error: " + ex.Message);
+                }
+            }
+
+            Console.WriteLine("GroovyCIA database downloaded!");
+        }
+
         private static void DownloadKeyDatabase()
         {
             string dbAddress = Base64Decode(aaa);
@@ -83,7 +154,7 @@ namespace DTK
             {
                 try
                 {
-                    client.DownloadFile(dbAddress, _keyDbPath);
+                    client.DownloadFile(dbAddress, _keyDBPath);
                 }
                 catch (WebException ex)
                 {
@@ -91,7 +162,7 @@ namespace DTK
                 }
             }
 
-            MessageBox.Show("Key database downloaded!");
+            Console.WriteLine("Key database downloaded!");
         }
 
         private void LoadDB(string path, string safe_path)
@@ -114,7 +185,8 @@ namespace DTK
                 titleList.Add(new Nintendo3DSRelease(entry.Key, entry.Value));
             }
 
-            List<Nintendo3DSRelease> parsedTitles = ParseTicketsFrom3dsDb(titleList);
+            List<Nintendo3DSRelease> firstTitles = ParseTicketsFromGroovyCiaDb(titleList.ToArray());
+            List<Nintendo3DSRelease> parsedTitles = ParseTicketsFrom3dsDb(firstTitles);
             loadedTitles = parsedTitles;
             countLabel.Text = parsedTitles.Count.ToString() + " titles loaded.";
             foreach (Nintendo3DSRelease entry in parsedTitles)
@@ -127,12 +199,12 @@ namespace DTK
 
         private void LoadKeyDatabase()
         {
-            if (!File.Exists(_keyDbPath))
+            if (!File.Exists(_keyDBPath))
             {
                 Console.WriteLine("Key database not found! Downloading...");
                 DownloadKeyDatabase();
             }
-            LoadDB(_keyDbPath, _keyDbPath);
+            LoadDB(_keyDBPath, _keyDBPath);
         }
 
         public static string Base64Encode(string plainText)
@@ -157,18 +229,55 @@ namespace DTK
             return cfg;
         }
 
+        private static List<Nintendo3DSRelease> ParseTicketsFromGroovyCiaDb(Nintendo3DSRelease[] parsedTickets)
+        {
+            Console.WriteLine( "Checking Title IDs against GroovyCIA database");
+            var xmlFile = XElement.Load(_groovyCIAPath);
+            var titlesFound = new List<Nintendo3DSRelease>();
+
+            foreach (var node in xmlFile.Nodes())
+            {
+                var titleInfo = node as XElement;
+
+                if (titleInfo == null)
+                {
+                    continue;
+                }
+
+                Func<string, string> titleData = tag => titleInfo.Element(tag).Value.Trim();
+                var titleId = titleData("titleid");
+
+                var matchedTitles =
+                    parsedTickets.Where(ticket => string.Compare(ticket.TitleId, titleId, StringComparison.OrdinalIgnoreCase) == 0)
+                        .ToList();
+
+                foreach (var title in matchedTitles)
+                {
+                    var name = titleData("name");
+                    var region = titleData("region");
+                    var serial = titleData("serial");
+
+                    var foundTicket = new Nintendo3DSRelease(name, null, region, null, serial, titleId, title.TitleKey, null);
+
+                    if (!titlesFound.Exists(a => Equals(a, foundTicket)))
+                    {
+                        titlesFound.Add(foundTicket);
+                    }
+                }
+            }
+
+            return titlesFound;
+        }
+
         private static List<Nintendo3DSRelease> ParseTicketsFrom3dsDb(List<Nintendo3DSRelease> parsedTickets)
         {
             Console.WriteLine("Checking Title IDs against 3dsdb.com database");
             var xmlFile = XElement.Load(_3dsDbPath);
-            List<Nintendo3DSRelease> foundTitles = new List<Nintendo3DSRelease>();
-
 
             foreach (XElement titleInfo in xmlFile.Nodes())
             {
                 Func<string, string> titleData = tag => titleInfo.Element(tag).Value.Trim();
                 var titleId = titleData("titleid");
-                
 
                 var matchedTitles =
                     parsedTickets.Where(ticket => string.Compare(ticket.TitleId, titleId, StringComparison.OrdinalIgnoreCase) == 0)
@@ -177,9 +286,6 @@ namespace DTK
                 foreach (var title in matchedTitles)
                 {
                     var publisher = titleData("publisher");
-                    var titlename = titleData("name");
-                    var region = titleData("region");
-                    var serial = titleData("serial");
 
                     string type;
 
@@ -205,24 +311,33 @@ namespace DTK
                     var sizeInMegabytes = Convert.ToInt32(decimal.Parse(titleData("trimmedsize")) / (int)Math.Pow(2, 20));
 
                     var foundTicket = new Nintendo3DSRelease(
-                        titlename,
+                        title.Name,
                         publisher,
-                        region,
+                        title.Region,
                         type,
-                        serial,
+                        title.Serial,
                         titleId,
                         title.TitleKey,
                         sizeInMegabytes);
 
-                    foundTitles.Add(foundTicket);
+                    if (!parsedTickets.Exists(a => Equals(a, foundTicket)))
+                    {
+                        parsedTickets.Add(foundTicket);
+                    }
+                    else
+                    {
+                        title.Type = type;
+                        title.Publisher = publisher;
+                        title.SizeInMegabytes = sizeInMegabytes;
+
+                        // remove title and add updated one
+                        parsedTickets.Remove(title);
+                        parsedTickets.Add(title);
+                    }
                 }
-
-
-
             }
 
-
-            return foundTitles;
+            return parsedTickets;
         }
 
         private static Dictionary<string, string> ParseDecTitleKeysBin(String DecryptedTitleKeysPath)

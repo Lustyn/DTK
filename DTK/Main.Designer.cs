@@ -175,11 +175,11 @@
             // 
             // loadKeyDB
             // 
-            this.loadKeyDB.Location = new System.Drawing.Point(560, 245);
+            this.loadKeyDB.Location = new System.Drawing.Point(504, 245);
             this.loadKeyDB.Name = "loadKeyDB";
-            this.loadKeyDB.Size = new System.Drawing.Size(80, 23);
+            this.loadKeyDB.Size = new System.Drawing.Size(136, 23);
             this.loadKeyDB.TabIndex = 8;
-            this.loadKeyDB.Text = "Load Key DB";
+            this.loadKeyDB.Text = "Download/Load Key DB";
             this.loadKeyDB.UseVisualStyleBackColor = true;
             this.loadKeyDB.Click += new System.EventHandler(this.loadKeyDB_Click);
             // 
