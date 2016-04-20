@@ -17,8 +17,10 @@ namespace DTK
     {
         private const string _3dsDbPath = "3dsreleases.xml";
         private const string _keyDbPath = "db.ebin";
+        private const string _configPath = "config.xml";
         private static string aaa = "***REMOVED***";
-        private const string _FunKeyCIAPath = "FunKeyCIA.py";
+        private static string _FunKeyCIAPath = "FunKeyCIA.py";
+        private static string _pythonPath = "python";
         private List<Nintendo3DSRelease> loadedTitles = new List<Nintendo3DSRelease>();
 
         public Main()
@@ -37,7 +39,22 @@ namespace DTK
             {
                 MessageBox.Show("Could not find FunKeyCIA.py. Downloading from CDN will not work");
             }
+            if (File.Exists(_configPath))
+            {
+                Config loadedConfig = ParseConfig();
+                _pythonPath = loadedConfig.PythonPath;
+                _FunKeyCIAPath = loadedConfig.FunKeyCIAPath;
+            } else
+            {
+                Config cfg = new Config();
+                System.Xml.Serialization.XmlSerializer writer =
+                    new System.Xml.Serialization.XmlSerializer(typeof(Config));
 
+                System.IO.FileStream file = System.IO.File.Create(_configPath);
+
+                writer.Serialize(file, cfg);
+                file.Close();
+            }
         }
 
 
@@ -128,6 +145,16 @@ namespace DTK
         {
             var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
+        private static Config ParseConfig()
+        {
+            Console.WriteLine("Loading config...");
+            System.Xml.Serialization.XmlSerializer reader = new System.Xml.Serialization.XmlSerializer(typeof(Config));
+            System.IO.StreamReader file = new System.IO.StreamReader(_configPath);
+            Config cfg = (Config)reader.Deserialize(file);
+            file.Close();
+            return cfg;
         }
 
         private static List<Nintendo3DSRelease> ParseTicketsFrom3dsDb(List<Nintendo3DSRelease> parsedTickets)
@@ -245,7 +272,7 @@ namespace DTK
             {
                 foreach (ListViewItem item in this.titleView.SelectedItems)
                 {
-                    var strCmdText = "/k python FunKeyCIA.py -title " + item.SubItems[1].Text + " -key " + item.SubItems[2].Text;
+                    var strCmdText = "/k "+ _pythonPath + " " + _FunKeyCIAPath + " -title " + item.SubItems[1].Text + " -key " + item.SubItems[2].Text;
                     System.Diagnostics.Process.Start("CMD.exe", strCmdText);
                 }
             }
