@@ -250,3 +250,6 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# make_cdn_cia
+!make_cdn_cia.exe
