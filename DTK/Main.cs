@@ -41,7 +41,7 @@ namespace DTK
 
             if (!File.Exists(_makecdnciaPath))
             {
-                MessageBox.Show(_makecdnciaPath + " could not be found! FunKeyCIA will error!");
+                DownloadMakeCDNCIA();
             }
 
             if (!File.Exists(_3dsDbPath))
@@ -109,6 +109,24 @@ namespace DTK
             }
 
             Console.WriteLine("3DS database downloaded!");
+        }
+
+        private static void DownloadMakeCDNCIA()
+        {
+            const string dbAddress = @"https://github.com/justync7/DTK/raw/master/make_cdn_cia.exe";
+            using (var client = new WebClient())
+            {
+                try
+                {
+                    client.DownloadFile(dbAddress, _makecdnciaPath);
+                }
+                catch (WebException ex)
+                {
+                    MessageBox.Show("Could not download the make_cdn_cia.exe. Error: " + ex.Message);
+                }
+            }
+
+            Console.WriteLine("make_cdn_cia.exe downloaded!");
         }
 
         private static void DownloadFunKeyCIA()
