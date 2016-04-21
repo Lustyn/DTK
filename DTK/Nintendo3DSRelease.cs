@@ -149,6 +149,7 @@
             var titleTypes = new Dictionary<string, string>()
                                 {
                                     { "00040000", "3DS Game" },
+                                    { "0004000E", "3DS Game" },
                                     { "00040010", "System Application" },
                                     { "0004001B", "System Data Archive" },
                                     { "000400DB", "System Data Archive" },
@@ -157,6 +158,7 @@
                                     { "00040130", "System Module" },
                                     { "00040138", "System Firmware" },
                                     { "00040001", "Download Play Title" },
+                                    { "00048004", "DSiWare Game" },
                                     { "00048005", "TWL System Application" },
                                     { "0004800F", "TWL System Data Archive" },
                                     { "00040002", "Game Demo" },
@@ -164,7 +166,7 @@
                                 };
 
             var choppedTitleId = titleId.Substring(0, 8);
-            return titleTypes.ContainsKey(choppedTitleId) ? titleTypes[choppedTitleId] : "Unknown type";
+            return titleTypes.ContainsKey(choppedTitleId) ? titleTypes[choppedTitleId] : "Unknown";
         }
 
         public override bool Equals(object obj)

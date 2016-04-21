@@ -16,16 +16,8 @@ namespace DTK
 {
     public partial class Main : Form
     {
-        private const string _3dsDbPath = "3dsreleases.xml";
-        private static string _keyDBPath = "db.ebin";
-        private const string _configPath = "config.xml";
-        private static string aaa = "**REMOVED**";
-        private static string _FunKeyCIAPath = "FunKeyCIA.py";
-        private static string _pythonPath = "python";
-        private static string _autoLoadPath = "db.ebin";
-        private const string _makecdnciaPath = "make_cdn_cia.exe";
-        private const string _groovyCIAPath = "groovyreleases.xml";
-        private static bool _autoLoad = true;
+        private static Config loadedConfig;
+        private const string ConfigPath = "config.xml";
         private int sortColumn = -1;
         private List<Nintendo3DSRelease> loadedTitles = new List<Nintendo3DSRelease>();
 
@@ -35,57 +27,54 @@ namespace DTK
             titleView.Items.Clear();
             countLabel.Text = "0 items loaded.";
 
-            if (!File.Exists(_groovyCIAPath))
+            if (File.Exists(ConfigPath))
+            {
+                loadedConfig = ParseConfig();
+            }
+            else
+            {
+                Config loadedConfig = new Config();
+                System.Xml.Serialization.XmlSerializer writer =
+                    new System.Xml.Serialization.XmlSerializer(typeof(Config));
+
+                System.IO.FileStream file = System.IO.File.Create(ConfigPath);
+
+                writer.Serialize(file, loadedConfig);
+                file.Close();
+            }
+
+            if (!File.Exists(loadedConfig.GroovyCIAPath))
             {
                 Console.WriteLine("3DS titles database not found! Downloading...");
                 DownloadGroovyCiaDatabase();
             }
 
-            if (!File.Exists(_makecdnciaPath))
+            if (!File.Exists(loadedConfig.MakeCDNCIAPath))
             {
                 DownloadMakeCDNCIA();
             }
 
-            if (!File.Exists(_3dsDbPath))
+            if (!File.Exists(loadedConfig.DSDBPath))
             {
                 Console.WriteLine("3DS titles database not found! Downloading...");
                 Download3DSDatabase();
             }
 
-            if (!File.Exists(_FunKeyCIAPath))
+            if (!File.Exists(loadedConfig.FunKeyCIAPath))
             {
                 Console.WriteLine("FunKeyCIA not found! Downloading...");
                 DownloadFunKeyCIA();
             }
-            if (File.Exists(_configPath))
-            {
-                Config loadedConfig = ParseConfig();
-                _pythonPath = loadedConfig.PythonPath;
-                _FunKeyCIAPath = loadedConfig.FunKeyCIAPath;
-                _keyDBPath = loadedConfig.keyDBPath;
-                _autoLoad = loadedConfig.autoLoad;
-                _autoLoadPath = loadedConfig.autoLoadPath;
-            } else
-            {
-                Config cfg = new Config();
-                System.Xml.Serialization.XmlSerializer writer =
-                    new System.Xml.Serialization.XmlSerializer(typeof(Config));
 
-                System.IO.FileStream file = System.IO.File.Create(_configPath);
-
-                writer.Serialize(file, cfg);
-                file.Close();
-            }
-
-            if (_autoLoad & File.Exists(_autoLoadPath))
+            if (loadedConfig.AutoLoad & File.Exists(loadedConfig.AutoLoadPath))
             {
-                LoadDB(_autoLoadPath, _autoLoadPath);
-            } else if (!File.Exists(_autoLoadPath))
+                LoadDB(loadedConfig.AutoLoadPath, loadedConfig.AutoLoadPath);
+            } else if (!File.Exists(loadedConfig.AutoLoadPath))
             {
-                if (_autoLoadPath == _keyDBPath)
+                if (loadedConfig.AutoLoadPath == loadedConfig.KeyDBPath)
                 {
-                    DownloadKeyDatabase();
-                    LoadDB(_autoLoadPath, _autoLoadPath);
+                    DownloadKeyDatabase(loadedConfig.KeyDBUrl);
+                    LoadDB(loadedConfig.KeyDBPath, loadedConfig.KeyDBPath);
                 }
                 else
                 {
@@ -97,12 +86,12 @@ namespace DTK
 
         private static void Download3DSDatabase()
         {
-            const string dbAddress = @"http://3dsdb.com/xml.php";
+            string dbAddress = @"http://3dsdb.com/xml.php";
             using (var client = new WebClient())
             {
                 try
                 {
-                    client.DownloadFile(dbAddress, _3dsDbPath);
+                    client.DownloadFile(dbAddress, loadedConfig.DSDBPath);
                 }
                 catch (WebException ex)
                 {
@@ -120,7 +109,7 @@ namespace DTK
             {
                 try
                 {
-                    client.DownloadFile(dbAddress, _makecdnciaPath);
+                    client.DownloadFile(dbAddress, loadedConfig.MakeCDNCIAPath);
                 }
                 catch (WebException ex)
                 {
@@ -138,7 +127,7 @@ namespace DTK
             {
                 try
                 {
-                    client.DownloadFile(dbAddress, _FunKeyCIAPath);
+                    client.DownloadFile(dbAddress, loadedConfig.FunKeyCIAPath);
                 }
                 catch (WebException ex)
                 {
@@ -156,7 +145,7 @@ namespace DTK
             {
                 try
                 {
-                    client.DownloadFile(dbAddress, _groovyCIAPath);
+                    client.DownloadFile(dbAddress, loadedConfig.GroovyCIAPath);
                 }
                 catch (WebException ex)
                 {
@@ -167,14 +156,14 @@ namespace DTK
             Console.WriteLine("GroovyCIA database downloaded!");
         }
 
-        private static void DownloadKeyDatabase()
+        private static void DownloadKeyDatabase(string url)
         {
-            string dbAddress = Base64Decode(aaa);
+            string dbAddress = url;
             using (var client = new WebClient())
             {
                 try
                 {
-                    client.DownloadFile(dbAddress, _keyDBPath);
+                    client.DownloadFile(dbAddress, loadedConfig.KeyDBPath);
                 }
                 catch (WebException ex)
                 {
@@ -195,8 +184,8 @@ namespace DTK
             {
                 isEncrypted.Checked = true;
             }
-            this.locationBox.Text = path;
-            this.titleView.Items.Clear();
+            locationBox.Text = path;
+            titleView.Items.Clear();
             Dictionary<string, string> titleDic = ParseDecTitleKeysBin(path);
             List<Nintendo3DSRelease> titleList = new List<Nintendo3DSRelease>();
 
@@ -211,20 +200,14 @@ namespace DTK
             countLabel.Text = parsedTitles.Count.ToString() + " titles loaded.";
             foreach (Nintendo3DSRelease entry in parsedTitles)
             {
+                if(entry.Type == "Unknown")
+                {
+                    entry.Type = Nintendo3DSRelease.GetTitleType(entry.TitleId);
+                }
                 string[] row = { entry.Name, entry.TitleId, entry.TitleKey, entry.Region, entry.SizeInMegabytes + "MB", entry.Type, entry.Publisher, entry.Serial };
                 var newEntry = new ListViewItem(row);
-                this.titleView.Items.Add(newEntry);
+                titleView.Items.Add(newEntry);
             }
-        }
-
-        private void LoadKeyDatabase()
-        {
-            if (!File.Exists(_keyDBPath))
-            {
-                Console.WriteLine("Key database not found! Downloading...");
-                DownloadKeyDatabase();
-            }
-            LoadDB(_keyDBPath, _keyDBPath);
         }
 
         public static string Base64Encode(string plainText)
@@ -243,7 +226,7 @@ namespace DTK
         {
             Console.WriteLine("Loading config...");
             System.Xml.Serialization.XmlSerializer reader = new System.Xml.Serialization.XmlSerializer(typeof(Config));
-            System.IO.StreamReader file = new System.IO.StreamReader(_configPath);
+            System.IO.StreamReader file = new System.IO.StreamReader(ConfigPath);
             Config cfg = (Config)reader.Deserialize(file);
             file.Close();
             return cfg;
@@ -252,7 +235,7 @@ namespace DTK
         private static List<Nintendo3DSRelease> ParseTicketsFromGroovyCiaDb(Nintendo3DSRelease[] parsedTickets)
         {
             Console.WriteLine( "Checking Title IDs against GroovyCIA database");
-            var xmlFile = XElement.Load(_groovyCIAPath);
+            var xmlFile = XElement.Load(loadedConfig.GroovyCIAPath);
             var titlesFound = new List<Nintendo3DSRelease>();
 
             foreach (var node in xmlFile.Nodes())
@@ -292,7 +275,7 @@ namespace DTK
         private static List<Nintendo3DSRelease> ParseTicketsFrom3dsDb(List<Nintendo3DSRelease> parsedTickets)
         {
             Console.WriteLine("Checking Title IDs against 3dsdb.com database");
-            var xmlFile = XElement.Load(_3dsDbPath);
+            var xmlFile = XElement.Load(loadedConfig.DSDBPath);
 
             foreach (XElement titleInfo in xmlFile.Nodes())
             {
@@ -324,7 +307,7 @@ namespace DTK
                             type = "EShop";
                             break;
                         default:
-                            type = "Unknown";
+                            type = Nintendo3DSRelease.GetTitleType(title.TitleId);
                             break;
                     }
 
@@ -405,9 +388,9 @@ namespace DTK
         {
             if (isEncrypted.Checked)
             {
-                foreach (ListViewItem item in this.titleView.SelectedItems)
+                foreach (ListViewItem item in titleView.SelectedItems)
                 {
-                    var strCmdText = "/k "+ _pythonPath + " " + _FunKeyCIAPath + " -title " + item.SubItems[1].Text + " -key " + item.SubItems[2].Text;
+                    var strCmdText = "/k \""+ loadedConfig.PythonPath + "\" \"" + loadedConfig.FunKeyCIAPath + "\" -title " + item.SubItems[1].Text + " -key " + item.SubItems[2].Text;
                     System.Diagnostics.Process.Start("CMD.exe", strCmdText);
                 }
             }
@@ -431,7 +414,7 @@ namespace DTK
                 {
                     string[] row = { entry.Name, entry.TitleId, entry.TitleKey, entry.Region, entry.SizeInMegabytes + "MB", entry.Type, entry.Publisher, entry.Serial };
                     var newEntry = new ListViewItem(row);
-                    this.titleView.Items.Add(newEntry);
+                    titleView.Items.Add(newEntry);
                 }
             }
             titleView.Refresh();
@@ -450,7 +433,8 @@ namespace DTK
 
         private void loadKeyDB_Click(object sender, EventArgs e)
         {
-            LoadKeyDatabase();
+            DownloadKeyDatabase(loadedConfig.KeyDBUrl);
+            LoadDB(loadedConfig.KeyDBPath, loadedConfig.KeyDBPath);
         }
 
         private void titleView_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -476,7 +460,7 @@ namespace DTK
             titleView.Sort();
             // Set the ListViewItemSorter property to a new ListViewItemComparer
             // object.
-            this.titleView.ListViewItemSorter = new ListViewItemComparer(e.Column,
+            titleView.ListViewItemSorter = new ListViewItemComparer(e.Column,
                                                               titleView.Sorting);
         }
 
