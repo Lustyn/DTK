@@ -19,7 +19,7 @@ namespace DTK
         private const string _3dsDbPath = "3dsreleases.xml";
         private static string _keyDBPath = "db.ebin";
         private const string _configPath = "config.xml";
-        private static string aaa = "***REMOVED***";
+        private static string aaa = "**REMOVED**";
         private static string _FunKeyCIAPath = "FunKeyCIA.py";
         private static string _pythonPath = "python";
         private static string _autoLoadPath = "db.ebin";
