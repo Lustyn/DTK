@@ -1,4 +1,6 @@
-﻿namespace DTK
+﻿using System.Windows.Forms;
+
+namespace DTK
 {
     partial class Main
     {
@@ -40,15 +42,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.locationBox = new System.Windows.Forms.TextBox();
             this.browseButton = new System.Windows.Forms.Button();
-            this.titleView = new System.Windows.Forms.ListView();
-            this.titleName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.titleID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.titleKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.region = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.size = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.publisher = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.serial = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.titleView = new ListView();
             this.searchBox = new System.Windows.Forms.TextBox();
             this.isEncrypted = new System.Windows.Forms.CheckBox();
             this.countLabel = new System.Windows.Forms.Label();
@@ -81,66 +75,27 @@
             this.titleView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.titleView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.titleName,
-            this.titleID,
-            this.titleKey,
-            this.region,
-            this.size,
-            this.type,
-            this.publisher,
-            this.serial});
+            this.titleView.View = View.Details;
             this.titleView.FullRowSelect = true;
             this.titleView.GridLines = true;
             this.titleView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1});
+            this.titleView.Columns.Add("Title Name", 126, HorizontalAlignment.Left);
+            this.titleView.Columns.Add("Title ID", 120, HorizontalAlignment.Left);
+            this.titleView.Columns.Add("Title Key", 225, HorizontalAlignment.Left);
+            this.titleView.Columns.Add("Region", 49, HorizontalAlignment.Left);
+            this.titleView.Columns.Add("Size", 40, HorizontalAlignment.Left);
+            this.titleView.Columns.Add("Type", 64, HorizontalAlignment.Left);
+            this.titleView.Columns.Add("Publisher", 113, HorizontalAlignment.Left);
+            this.titleView.Columns.Add("Serial", 64, HorizontalAlignment.Left);
             this.titleView.Location = new System.Drawing.Point(12, 38);
             this.titleView.Name = "titleView";
+            this.titleView.Sorting = SortOrder.Ascending;
             this.titleView.Size = new System.Drawing.Size(744, 206);
             this.titleView.TabIndex = 3;
             this.titleView.UseCompatibleStateImageBehavior = false;
             this.titleView.View = System.Windows.Forms.View.Details;
             this.titleView.ItemActivate += new System.EventHandler(this.titleView_ItemActivate);
-            // 
-            // titleName
-            // 
-            this.titleName.Text = "Title Name";
-            this.titleName.Width = 126;
-            // 
-            // titleID
-            // 
-            this.titleID.Text = "Title ID";
-            this.titleID.Width = 108;
-            // 
-            // titleKey
-            // 
-            this.titleKey.Text = "Title Key";
-            this.titleKey.Width = 201;
-            // 
-            // region
-            // 
-            this.region.Text = "Region";
-            this.region.Width = 49;
-            // 
-            // size
-            // 
-            this.size.Text = "Size";
-            this.size.Width = 36;
-            // 
-            // type
-            // 
-            this.type.Text = "Type";
-            this.type.Width = 43;
-            // 
-            // publisher
-            // 
-            this.publisher.Text = "Publisher";
-            this.publisher.Width = 113;
-            // 
-            // serial
-            // 
-            this.serial.Text = "Serial";
-            this.serial.Width = 64;
             // 
             // searchBox
             // 
@@ -207,14 +162,6 @@
         private System.Windows.Forms.TextBox locationBox;
         private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.ListView titleView;
-        private System.Windows.Forms.ColumnHeader titleName;
-        private System.Windows.Forms.ColumnHeader titleID;
-        private System.Windows.Forms.ColumnHeader titleKey;
-        private System.Windows.Forms.ColumnHeader region;
-        private System.Windows.Forms.ColumnHeader type;
-        private System.Windows.Forms.ColumnHeader size;
-        private System.Windows.Forms.ColumnHeader publisher;
-        private System.Windows.Forms.ColumnHeader serial;
         private System.Windows.Forms.TextBox searchBox;
         private System.Windows.Forms.CheckBox isEncrypted;
         private System.Windows.Forms.Label countLabel;
