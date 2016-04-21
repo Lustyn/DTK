@@ -131,6 +131,7 @@ namespace DTK
             // 
             // loadKeyDB
             // 
+            this.loadKeyDB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.loadKeyDB.Location = new System.Drawing.Point(504, 245);
             this.loadKeyDB.Name = "loadKeyDB";
             this.loadKeyDB.Size = new System.Drawing.Size(136, 23);
