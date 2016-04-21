@@ -83,7 +83,7 @@ namespace DTK
             this.titleView.Columns.Add("Title Name", 126, HorizontalAlignment.Left);
             this.titleView.Columns.Add("Title ID", 120, HorizontalAlignment.Left);
             this.titleView.Columns.Add("Title Key", 225, HorizontalAlignment.Left);
-            this.titleView.Columns.Add("Region", 49, HorizontalAlignment.Left);
+            this.titleView.Columns.Add("Region", 70, HorizontalAlignment.Left);
             this.titleView.Columns.Add("Size", 40, HorizontalAlignment.Left);
             this.titleView.Columns.Add("Type", 64, HorizontalAlignment.Left);
             this.titleView.Columns.Add("Publisher", 113, HorizontalAlignment.Left);
@@ -96,6 +96,7 @@ namespace DTK
             this.titleView.UseCompatibleStateImageBehavior = false;
             this.titleView.View = System.Windows.Forms.View.Details;
             this.titleView.ItemActivate += new System.EventHandler(this.titleView_ItemActivate);
+            this.titleView.ColumnClick += new ColumnClickEventHandler(titleView_ColumnClick);
             // 
             // searchBox
             // 

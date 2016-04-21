@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,6 +26,7 @@ namespace DTK
         private const string _makecdnciaPath = "make_cdn_cia.exe";
         private const string _groovyCIAPath = "groovyreleases.xml";
         private static bool _autoLoad = true;
+        private int sortColumn = -1;
         private List<Nintendo3DSRelease> loadedTitles = new List<Nintendo3DSRelease>();
 
         public Main()
@@ -449,6 +451,62 @@ namespace DTK
         private void loadKeyDB_Click(object sender, EventArgs e)
         {
             LoadKeyDatabase();
+        }
+
+        private void titleView_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            // Determine whether the column is the same as the last column clicked.
+            if (e.Column != sortColumn)
+            {
+                // Set the sort column to the new column.
+                sortColumn = e.Column;
+                // Set the sort order to ascending by default.
+                titleView.Sorting = SortOrder.Ascending;
+            }
+            else
+            {
+                // Determine what the last sort order was and change it.
+                if (titleView.Sorting == SortOrder.Ascending)
+                    titleView.Sorting = SortOrder.Descending;
+                else
+                    titleView.Sorting = SortOrder.Ascending;
+            }
+
+            // Call the sort method to manually sort.
+            titleView.Sort();
+            // Set the ListViewItemSorter property to a new ListViewItemComparer
+            // object.
+            this.titleView.ListViewItemSorter = new ListViewItemComparer(e.Column,
+                                                              titleView.Sorting);
+        }
+
+        public class ListViewItemComparer : IComparer
+        {
+            private int col;
+            private SortOrder order;
+            public ListViewItemComparer()
+            {
+                col = 0;
+                order = SortOrder.Ascending;
+            }
+            public ListViewItemComparer(int column, SortOrder order)
+            {
+                col = column;
+                this.order = order;
+            }
+            public int Compare(object x, object y)
+            {
+                int returnVal = -1;
+                returnVal = String.Compare(((ListViewItem)x).SubItems[col].Text,
+                                ((ListViewItem)y).SubItems[col].Text);
+                // Determine whether the sort order is descending.
+                if (order == SortOrder.Descending)
+                    // Invert the value returned by String.Compare.
+                    returnVal *= -1;
+                return returnVal;
+            }
+
+
         }
     }
 }
