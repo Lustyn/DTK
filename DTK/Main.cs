@@ -376,16 +376,16 @@ namespace DTK
         private void browseButton_Click(object sender, EventArgs e)
         {
             // Displays an OpenFileDialog so the user can select a Cursor.
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.Filter = "BIN files|*.bin|EBIN files|*.ebin|DBIN files|*.dbin|All files|*.*";
-            openFileDialog1.Title = "Select a title key database file";
+            OpenFileDialog openBinFileDialog = new OpenFileDialog();
+            openBinFileDialog.Filter = "BIN files|*.bin|EBIN files|*.ebin|DBIN files|*.dbin|All files|*.*";
+            openBinFileDialog.Title = "Select a title key database file";
 
             // Show the Dialog.
             // If the user clicked OK in the dialog and
-            // a .CUR file was selected, open it.
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            // a .BIN file was selected, open it.
+            if (openBinFileDialog.ShowDialog() == DialogResult.OK)
             {
-                LoadDB(openFileDialog1.FileName, openFileDialog1.SafeFileName);
+                LoadDB(openBinFileDialog.FileName, openBinFileDialog.SafeFileName);
             }
         }
 
