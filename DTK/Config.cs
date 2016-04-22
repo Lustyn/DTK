@@ -28,7 +28,7 @@ namespace DTK
             KeyDBPath = "db.ebin";
             AutoLoad = false;
             AutoLoadPath = "db.ebin";
-            KeyDBUrl = "http://encrypted.download.here";
+            KeyDBUrl = "undefined";
         }
     }
 }

@@ -33,7 +33,7 @@ namespace DTK
             }
             else
             {
-                Config loadedConfig = new Config();
+                loadedConfig = new Config();
                 System.Xml.Serialization.XmlSerializer writer =
                     new System.Xml.Serialization.XmlSerializer(typeof(Config));
 
@@ -41,6 +41,11 @@ namespace DTK
 
                 writer.Serialize(file, loadedConfig);
                 file.Close();
+            }
+
+            if (loadedConfig.KeyDBUrl == "undefined")
+            {
+                loadKeyDB.Enabled = false;
             }
 
             if (!File.Exists(loadedConfig.GroovyCIAPath))
@@ -69,9 +74,9 @@ namespace DTK
             if (loadedConfig.AutoLoad & File.Exists(loadedConfig.AutoLoadPath))
             {
                 LoadDB(loadedConfig.AutoLoadPath, loadedConfig.AutoLoadPath);
-            } else if (!File.Exists(loadedConfig.AutoLoadPath))
+            } else if (!File.Exists(loadedConfig.AutoLoadPath) & loadedConfig.AutoLoad)
             {
-                if (loadedConfig.AutoLoadPath == loadedConfig.KeyDBPath)
+                if (loadedConfig.AutoLoadPath == loadedConfig.KeyDBPath & loadedConfig.KeyDBUrl != "undefined")
                 {
                     DownloadKeyDatabase(loadedConfig.KeyDBUrl);
                     LoadDB(loadedConfig.KeyDBPath, loadedConfig.KeyDBPath);
@@ -390,7 +395,8 @@ namespace DTK
             {
                 foreach (ListViewItem item in titleView.SelectedItems)
                 {
-                    var strCmdText = "/k \""+ loadedConfig.PythonPath + "\" \"" + loadedConfig.FunKeyCIAPath + "\" -title " + item.SubItems[1].Text + " -key " + item.SubItems[2].Text;
+                    var strCmdText = "/k "+ loadedConfig.PythonPath + " " + loadedConfig.FunKeyCIAPath + " -title " + item.SubItems[1].Text + " -key " + item.SubItems[2].Text;
+                    Console.WriteLine(strCmdText);
                     System.Diagnostics.Process.Start("CMD.exe", strCmdText);
                 }
             }
