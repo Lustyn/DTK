@@ -22,6 +22,7 @@ namespace DTK
 
         public Config()
         {
+            PythonPath = "python";
             MakeCDNCIAPath = "make_cdn_cia.exe";
             FunKeyCIAPath = "FunKeyCIA.py";
             DSDBPath = "3dsreleases.xml";
