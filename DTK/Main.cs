@@ -114,10 +114,6 @@ namespace DTK
         private static void DownloadMakeCDNCIA()
         {
             string dbAddress = @"https://github.com/justync7/DTK/raw/master/make_cdn_cia.exe";
-            if (Config.IsLinux)
-            {
-                dbAddress = @"https://github.com/justync7/DTK/raw/master/make_cdn_cia";
-            }
             using (var client = new WebClient())
             {
                 try

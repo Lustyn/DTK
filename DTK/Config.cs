@@ -22,15 +22,7 @@ namespace DTK
 
         public Config()
         {
-            PythonPath = "python";
-            if (IsLinux)
-            {
-                MakeCDNCIAPath = "make_cdn_cia";
-            }
-            else
-            {
-                MakeCDNCIAPath = "make_cdn_cia.exe";
-            }
+            MakeCDNCIAPath = "make_cdn_cia.exe";
             FunKeyCIAPath = "FunKeyCIA.py";
             DSDBPath = "3dsreleases.xml";
             GroovyCIAPath = "groovyreleases.xml";
@@ -43,15 +35,6 @@ namespace DTK
         public string GetCIAFolder()
         {
             return Path.Combine(Path.GetDirectoryName(FunKeyCIAPath), "cia");
-        }
-
-        public static bool IsLinux
-        {
-            get
-            {
-                int p = (int)Environment.OSVersion.Platform;
-                return (p == 4) || (p == 6) || (p == 128);
-            }
         }
     }
 }
