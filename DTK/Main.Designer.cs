@@ -39,6 +39,7 @@ namespace DTK
             this.isEncrypted = new System.Windows.Forms.CheckBox();
             this.countLabel = new System.Windows.Forms.Label();
             this.loadKeyDB = new System.Windows.Forms.Button();
+            this.renameButton = new System.Windows.Forms.Button();
             this.titleView = new BrightIdeasSoftware.ObjectListView();
             this.TitleName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.TitleID = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -48,7 +49,6 @@ namespace DTK
             this.TitleType = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.TitlePublisher = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.TitleSerial = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.renameButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.titleView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -115,6 +115,17 @@ namespace DTK
             this.loadKeyDB.Text = "Download/Load Key DB";
             this.loadKeyDB.UseVisualStyleBackColor = true;
             this.loadKeyDB.Click += new System.EventHandler(this.loadKeyDB_Click);
+            // 
+            // renameButton
+            // 
+            this.renameButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.renameButton.Location = new System.Drawing.Point(470, 245);
+            this.renameButton.Name = "renameButton";
+            this.renameButton.Size = new System.Drawing.Size(75, 23);
+            this.renameButton.TabIndex = 12;
+            this.renameButton.Text = "Sort CIAs";
+            this.renameButton.UseVisualStyleBackColor = true;
+            this.renameButton.Click += new System.EventHandler(this.renameButton_Click);
             // 
             // titleView
             // 
@@ -198,17 +209,6 @@ namespace DTK
             this.TitleSerial.AspectName = "Serial";
             this.TitleSerial.Text = "Serial";
             this.TitleSerial.Width = 64;
-            // 
-            // renameButton
-            // 
-            this.renameButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.renameButton.Location = new System.Drawing.Point(470, 245);
-            this.renameButton.Name = "renameButton";
-            this.renameButton.Size = new System.Drawing.Size(75, 23);
-            this.renameButton.TabIndex = 12;
-            this.renameButton.Text = "Sort CIAs";
-            this.renameButton.UseVisualStyleBackColor = true;
-            this.renameButton.Click += new System.EventHandler(this.renameButton_Click);
             // 
             // Main
             // 

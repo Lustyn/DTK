@@ -253,3 +253,6 @@ paket-files/
 
 # make_cdn_cia
 !make_cdn_cia.exe
+
+# ObjectListView.dll
+!ObjectListView.dll

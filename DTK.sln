@@ -1,9 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTK", "DTK\DTK.csproj", "{A29B6D88-1A00-49BB-873E-055A218AB60A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{18FEDA0C-D147-4286-B39A-01204808106A} = {18FEDA0C-D147-4286-B39A-01204808106A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectListView2012", "ObjectListView\ObjectListView2012.csproj", "{18FEDA0C-D147-4286-B39A-01204808106A}"
 EndProject

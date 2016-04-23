@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using DTK;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace DTK
 {
@@ -26,7 +27,6 @@ namespace DTK
 
         public Main()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += (sender, arg) => { if (arg.Name.StartsWith("ObjectListView")) return Assembly.Load(Properties.Resources.ObjectListView); return null; };
             InitializeComponent();
             titleView.Items.Clear();
             countLabel.Text = "0 items loaded.";
@@ -113,7 +113,14 @@ namespace DTK
 
         private static void DownloadMakeCDNCIA()
         {
-            const string dbAddress = @"https://github.com/justync7/DTK/raw/master/make_cdn_cia.exe";
+            if (Config.IsLinux)
+            {
+                const string dbAddress = @"https://github.com/justync7/DTK/raw/master/make_cdn_cia";
+            }
+            else
+            {
+                const string dbAddress = @"https://github.com/justync7/DTK/raw/master/make_cdn_cia.exe";
+            }
             using (var client = new WebClient())
             {
                 try
@@ -207,6 +214,13 @@ namespace DTK
 
             List<Nintendo3DSRelease> firstTitles = ParseTicketsFromGroovyCiaDb(titleList.ToArray());
             List<Nintendo3DSRelease> parsedTitles = ParseTicketsFrom3dsDb(firstTitles);
+            foreach (Nintendo3DSRelease entry in parsedTitles)
+            {
+                if (entry.Type == "Unknown")
+                {
+                    entry.Type = Nintendo3DSRelease.GetTitleType(entry.TitleId);
+                }
+            }
             loadedTitles = parsedTitles;
             countLabel.Text = parsedTitles.Count.ToString() + " titles loaded.";
             titleView.SetObjects(parsedTitles);
@@ -370,6 +384,14 @@ namespace DTK
             return ticketsDictionary;
         }
 
+        public void RunProcess(string path, string arguments)
+        {
+            var p = new Process();
+            p.StartInfo.FileName = path;
+            p.StartInfo.Arguments = arguments;
+            p.Start();
+        }
+
         private string makePathSafe(string path)
         {
             string fixedPath = path;
@@ -388,7 +410,7 @@ namespace DTK
 
         private string GetTitleCIA(string titleID)
         {
-            return loadedConfig.GetCIAFolder() + "\\" + titleID + "\\" + titleID + ".cia";
+            return loadedConfig.GetCIAFolder() + Path.DirectorySeparatorChar + titleID + Path.DirectorySeparatorChar + titleID + ".cia";
         }
 
         private string GetSortedTitleName(string titleID)
@@ -398,12 +420,12 @@ namespace DTK
 
         private string GetSortedTitleCIA(string titleID)
         {
-            return loadedConfig.GetCIAFolder() + "\\" + titleID + "\\" + GetSortedTitleName(titleID) + ".cia";
+            return loadedConfig.GetCIAFolder() + Path.DirectorySeparatorChar + titleID + Path.DirectorySeparatorChar + GetSortedTitleName(titleID) + ".cia";
         }
 
         private string GetSortedTitleDirectory(string titleID)
         {
-            return loadedConfig.GetCIAFolder() + "\\" + GetSortedTitleName(titleID);
+            return loadedConfig.GetCIAFolder() + Path.DirectorySeparatorChar + GetSortedTitleName(titleID);
         }
 
         private string[] GetUnsortedDirectories(string folder)
@@ -441,9 +463,9 @@ namespace DTK
             {
                 foreach (ListViewItem item in titleView.SelectedItems)
                 {
-                    var strCmdText = "/k "+ loadedConfig.PythonPath + " " + loadedConfig.FunKeyCIAPath + " -title " + item.SubItems[1].Text + " -key " + item.SubItems[2].Text;
-                    Console.WriteLine(strCmdText);
-                    System.Diagnostics.Process.Start("cmd.exe", strCmdText);
+                    var strPath = loadedConfig.PythonPath;
+                    var strArg = loadedConfig.FunKeyCIAPath + " -title " + item.SubItems[1].Text + " -key " + item.SubItems[2].Text;
+                    RunProcess(strPath, strArg);
                 }
             }
         }
