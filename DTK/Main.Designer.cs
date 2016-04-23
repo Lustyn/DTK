@@ -43,18 +43,19 @@ namespace DTK
             this.locationBox = new System.Windows.Forms.TextBox();
             this.browseButton = new System.Windows.Forms.Button();
             this.titleView = new System.Windows.Forms.ListView();
+            this.TitleName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.TitleID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.TitleKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.TitleRegion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.TitleSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.TitleType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.TitlePublisher = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.TitleSerial = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.searchBox = new System.Windows.Forms.TextBox();
             this.isEncrypted = new System.Windows.Forms.CheckBox();
             this.countLabel = new System.Windows.Forms.Label();
             this.loadKeyDB = new System.Windows.Forms.Button();
-            this.TitleName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.TitleID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.TitleKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Region = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Size = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Publisher = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Serial = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.renameButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // locationBox
@@ -64,13 +65,13 @@ namespace DTK
             this.locationBox.Location = new System.Drawing.Point(182, 12);
             this.locationBox.Name = "locationBox";
             this.locationBox.ReadOnly = true;
-            this.locationBox.Size = new System.Drawing.Size(493, 20);
+            this.locationBox.Size = new System.Drawing.Size(491, 20);
             this.locationBox.TabIndex = 1;
             // 
             // browseButton
             // 
             this.browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.browseButton.Location = new System.Drawing.Point(681, 9);
+            this.browseButton.Location = new System.Drawing.Point(679, 9);
             this.browseButton.Name = "browseButton";
             this.browseButton.Size = new System.Drawing.Size(75, 23);
             this.browseButton.TabIndex = 2;
@@ -87,66 +88,24 @@ namespace DTK
             this.TitleName,
             this.TitleID,
             this.TitleKey,
-            this.Region,
-            this.Size,
-            this.Type,
-            this.Publisher,
-            this.Serial});
+            this.TitleRegion,
+            this.TitleSize,
+            this.TitleType,
+            this.TitlePublisher,
+            this.TitleSerial});
             this.titleView.FullRowSelect = true;
             this.titleView.GridLines = true;
             this.titleView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1});
             this.titleView.Location = new System.Drawing.Point(12, 38);
             this.titleView.Name = "titleView";
-            this.titleView.Size = new System.Drawing.Size(744, 206);
+            this.titleView.Size = new System.Drawing.Size(742, 233);
             this.titleView.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.titleView.TabIndex = 3;
             this.titleView.UseCompatibleStateImageBehavior = false;
             this.titleView.View = System.Windows.Forms.View.Details;
             this.titleView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.titleView_ColumnClick);
             this.titleView.ItemActivate += new System.EventHandler(this.titleView_ItemActivate);
-            // 
-            // searchBox
-            // 
-            this.searchBox.Location = new System.Drawing.Point(13, 12);
-            this.searchBox.Name = "searchBox";
-            this.searchBox.Size = new System.Drawing.Size(163, 20);
-            this.searchBox.TabIndex = 4;
-            this.searchBox.TextChanged += new System.EventHandler(this.searchBox_TextChanged);
-            // 
-            // isEncrypted
-            // 
-            this.isEncrypted.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.isEncrypted.AutoSize = true;
-            this.isEncrypted.Location = new System.Drawing.Point(646, 249);
-            this.isEncrypted.Name = "isEncrypted";
-            this.isEncrypted.Size = new System.Drawing.Size(110, 17);
-            this.isEncrypted.TabIndex = 5;
-            this.isEncrypted.Text = "encTitleKeys.bin?";
-            this.isEncrypted.UseVisualStyleBackColor = true;
-            this.isEncrypted.CheckedChanged += new System.EventHandler(this.isEncrypted_CheckedChanged);
-            // 
-            // countLabel
-            // 
-            this.countLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.countLabel.AutoSize = true;
-            this.countLabel.Location = new System.Drawing.Point(12, 250);
-            this.countLabel.Name = "countLabel";
-            this.countLabel.Size = new System.Drawing.Size(75, 13);
-            this.countLabel.TabIndex = 6;
-            this.countLabel.Text = "1 titles loaded.";
-            this.countLabel.Click += new System.EventHandler(this.countLabel_Click);
-            // 
-            // loadKeyDB
-            // 
-            this.loadKeyDB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.loadKeyDB.Location = new System.Drawing.Point(504, 245);
-            this.loadKeyDB.Name = "loadKeyDB";
-            this.loadKeyDB.Size = new System.Drawing.Size(136, 23);
-            this.loadKeyDB.TabIndex = 8;
-            this.loadKeyDB.Text = "Download/Load Key DB";
-            this.loadKeyDB.UseVisualStyleBackColor = true;
-            this.loadKeyDB.Click += new System.EventHandler(this.loadKeyDB_Click);
             // 
             // TitleName
             // 
@@ -163,36 +122,90 @@ namespace DTK
             this.TitleKey.Text = "Title Key";
             this.TitleKey.Width = 201;
             // 
-            // Region
+            // TitleRegion
             // 
-            this.Region.Text = "Region";
-            this.Region.Width = 47;
+            this.TitleRegion.Text = "Region";
+            this.TitleRegion.Width = 47;
             // 
-            // Size
+            // TitleSize
             // 
-            this.Size.Text = "Size";
-            this.Size.Width = 36;
+            this.TitleSize.Text = "Size";
+            this.TitleSize.Width = 36;
             // 
-            // Type
+            // TitleType
             // 
-            this.Type.Text = "Type";
-            this.Type.Width = 43;
+            this.TitleType.Text = "Type";
+            this.TitleType.Width = 43;
             // 
-            // Publisher
+            // TitlePublisher
             // 
-            this.Publisher.Text = "Publisher";
-            this.Publisher.Width = 113;
+            this.TitlePublisher.Text = "Publisher";
+            this.TitlePublisher.Width = 113;
             // 
-            // Serial
+            // TitleSerial
             // 
-            this.Serial.Text = "Serial";
-            this.Serial.Width = 64;
+            this.TitleSerial.Text = "Serial";
+            this.TitleSerial.Width = 64;
+            // 
+            // searchBox
+            // 
+            this.searchBox.Location = new System.Drawing.Point(13, 12);
+            this.searchBox.Name = "searchBox";
+            this.searchBox.Size = new System.Drawing.Size(163, 20);
+            this.searchBox.TabIndex = 4;
+            this.searchBox.TextChanged += new System.EventHandler(this.searchBox_TextChanged);
+            // 
+            // isEncrypted
+            // 
+            this.isEncrypted.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.isEncrypted.AutoSize = true;
+            this.isEncrypted.Location = new System.Drawing.Point(644, 276);
+            this.isEncrypted.Name = "isEncrypted";
+            this.isEncrypted.Size = new System.Drawing.Size(110, 17);
+            this.isEncrypted.TabIndex = 5;
+            this.isEncrypted.Text = "encTitleKeys.bin?";
+            this.isEncrypted.UseVisualStyleBackColor = true;
+            this.isEncrypted.CheckedChanged += new System.EventHandler(this.isEncrypted_CheckedChanged);
+            // 
+            // countLabel
+            // 
+            this.countLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.countLabel.AutoSize = true;
+            this.countLabel.Location = new System.Drawing.Point(12, 277);
+            this.countLabel.Name = "countLabel";
+            this.countLabel.Size = new System.Drawing.Size(75, 13);
+            this.countLabel.TabIndex = 6;
+            this.countLabel.Text = "1 titles loaded.";
+            this.countLabel.Click += new System.EventHandler(this.countLabel_Click);
+            // 
+            // loadKeyDB
+            // 
+            this.loadKeyDB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.loadKeyDB.Location = new System.Drawing.Point(502, 272);
+            this.loadKeyDB.Name = "loadKeyDB";
+            this.loadKeyDB.Size = new System.Drawing.Size(136, 23);
+            this.loadKeyDB.TabIndex = 8;
+            this.loadKeyDB.Text = "Download/Load Key DB";
+            this.loadKeyDB.UseVisualStyleBackColor = true;
+            this.loadKeyDB.Click += new System.EventHandler(this.loadKeyDB_Click);
+            // 
+            // renameButton
+            // 
+            this.renameButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.renameButton.Location = new System.Drawing.Point(416, 272);
+            this.renameButton.Name = "renameButton";
+            this.renameButton.Size = new System.Drawing.Size(80, 23);
+            this.renameButton.TabIndex = 10;
+            this.renameButton.Text = "Rename CIAs";
+            this.renameButton.UseVisualStyleBackColor = true;
+            this.renameButton.Click += new System.EventHandler(this.renameButton_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(768, 272);
+            this.ClientSize = new System.Drawing.Size(766, 299);
+            this.Controls.Add(this.renameButton);
             this.Controls.Add(this.loadKeyDB);
             this.Controls.Add(this.countLabel);
             this.Controls.Add(this.isEncrypted);
@@ -219,11 +232,12 @@ namespace DTK
         private ColumnHeader TitleName;
         private ColumnHeader TitleID;
         private ColumnHeader TitleKey;
-        private ColumnHeader Region;
-        private ColumnHeader Size;
-        private ColumnHeader Type;
-        private ColumnHeader Publisher;
-        private ColumnHeader Serial;
+        private ColumnHeader TitleRegion;
+        private ColumnHeader TitleSize;
+        private ColumnHeader TitleType;
+        private ColumnHeader TitlePublisher;
+        private ColumnHeader TitleSerial;
+        private Button renameButton;
     }
 }
 

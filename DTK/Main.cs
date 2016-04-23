@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -18,6 +19,7 @@ namespace DTK
     {
         private static Config loadedConfig;
         private const string ConfigPath = "config.xml";
+        private Regex titleIDMatch = new Regex(@"([A-Za-z0-9]{16})");
         private int sortColumn = -1;
         private List<Nintendo3DSRelease> loadedTitles = new List<Nintendo3DSRelease>();
 
@@ -373,6 +375,55 @@ namespace DTK
             return ticketsDictionary;
         }
 
+        private string makePathSafe(string path)
+        {
+            string fixedPath = path;
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                fixedPath = fixedPath.Replace(c.ToString(), "");
+            }
+            fixedPath = fixedPath.Replace(" ", "_");
+            return fixedPath;
+        }
+
+        private bool IsTitleID(string id)
+        {
+            return titleIDMatch.IsMatch(id);
+        }
+
+        private string GetTitleCIA(string titleID)
+        {
+            return loadedConfig.GetCIAFolder() + "\\" + titleID + "\\" + titleID + ".cia";
+        }
+
+        private string GetSortedTitleName(string titleID)
+        {
+            return makePathSafe(loadedTitles.Where(ticket => string.Compare(ticket.TitleId, titleID, StringComparison.OrdinalIgnoreCase) == 0).ToArray()[0].Name);
+        }
+
+        private string GetSortedTitleCIA(string titleID)
+        {
+            return loadedConfig.GetCIAFolder() + "\\" + titleID + "\\" + GetSortedTitleName(titleID) + ".cia";
+        }
+
+        private string GetSortedTitleDirectory(string titleID)
+        {
+            return loadedConfig.GetCIAFolder() + "\\" + GetSortedTitleName(titleID);
+        }
+
+        private string[] GetUnsortedDirectories(string folder)
+        {
+            List<string> results = new List<string>();
+            foreach (string dir in Directory.GetDirectories(folder))
+            {
+                if(IsTitleID(dir))
+                {
+                    results.Add(dir);
+                }
+            }
+            return results.ToArray();
+        }
+
         private void browseButton_Click(object sender, EventArgs e)
         {
             // Displays an OpenFileDialog so the user can select a Cursor.
@@ -397,7 +448,7 @@ namespace DTK
                 {
                     var strCmdText = "/k "+ loadedConfig.PythonPath + " " + loadedConfig.FunKeyCIAPath + " -title " + item.SubItems[1].Text + " -key " + item.SubItems[2].Text;
                     Console.WriteLine(strCmdText);
-                    System.Diagnostics.Process.Start("CMD.exe", strCmdText);
+                    System.Diagnostics.Process.Start("cmd.exe", strCmdText);
                 }
             }
         }
@@ -496,6 +547,44 @@ namespace DTK
                 return returnVal;
             }
 
+
+        }
+
+        private void renameButton_Click(object sender, EventArgs e)
+        {
+            if (loadedTitles.Count < 1)
+            {
+                MessageBox.Show("Sorting failed. No titles are loaded.");
+                return;
+            }
+            string[] unsortedDirs = GetUnsortedDirectories(loadedConfig.GetCIAFolder());
+            int folderCount = unsortedDirs.Length;
+            if (folderCount < 1)
+            {
+                MessageBox.Show("There are no titles to sort!");
+                return;
+            }
+
+            foreach (string titleFolder in unsortedDirs)
+            {
+                string titleID = new DirectoryInfo(titleFolder).Name;
+                string ciaFile = GetTitleCIA(titleID);
+                if (File.Exists(ciaFile))
+                {
+                    string sortedCIAName = GetSortedTitleCIA(titleID);
+                    if (File.Exists(sortedCIAName)) File.Delete(sortedCIAName);
+                    File.Move(ciaFile, sortedCIAName);
+
+                    string sortedCIADirectory = GetSortedTitleDirectory(titleID);
+                    Directory.Move(titleFolder, sortedCIADirectory);
+                }
+            }
+
+            MessageBox.Show("Sorted " + folderCount + " titles!");
+        }
+
+        private void renameBar_Click(object sender, EventArgs e)
+        {
 
         }
     }

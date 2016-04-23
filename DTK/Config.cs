@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace DTK
         public string PythonPath { get; set; }
         public string MakeCDNCIAPath { get; set; }
         public string FunKeyCIAPath { get; set; }
+        public string CIAsFolder { get; set; }
         public string DSDBPath { get; set; }
         public string GroovyCIAPath { get; set; }
         public string KeyDBPath { get; set; }
@@ -29,6 +31,11 @@ namespace DTK
             AutoLoad = false;
             AutoLoadPath = "db.ebin";
             KeyDBUrl = "undefined";
+        }
+
+        public string GetCIAFolder()
+        {
+            return Path.Combine(Path.GetDirectoryName(FunKeyCIAPath), "cia");
         }
     }
 }
