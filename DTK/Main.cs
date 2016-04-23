@@ -12,6 +12,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using DTK;
+using System.Reflection;
 
 namespace DTK
 {
@@ -20,11 +22,11 @@ namespace DTK
         private static Config loadedConfig;
         private const string ConfigPath = "config.xml";
         private Regex titleIDMatch = new Regex(@"([A-Za-z0-9]{16})");
-        private int sortColumn = -1;
         private List<Nintendo3DSRelease> loadedTitles = new List<Nintendo3DSRelease>();
 
         public Main()
         {
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, arg) => { if (arg.Name.StartsWith("ObjectListView")) return Assembly.Load(Properties.Resources.ObjectListView); return null; };
             InitializeComponent();
             titleView.Items.Clear();
             countLabel.Text = "0 items loaded.";
@@ -198,23 +200,16 @@ namespace DTK
 
             foreach (KeyValuePair<string, string> entry in titleDic)
             {
-                titleList.Add(new Nintendo3DSRelease(entry.Key, entry.Value));
+                Nintendo3DSRelease newTitle = new Nintendo3DSRelease(entry.Key, entry.Value);
+                newTitle.Type = Nintendo3DSRelease.GetTitleType(newTitle.TitleId);
+                titleList.Add(newTitle);
             }
 
             List<Nintendo3DSRelease> firstTitles = ParseTicketsFromGroovyCiaDb(titleList.ToArray());
             List<Nintendo3DSRelease> parsedTitles = ParseTicketsFrom3dsDb(firstTitles);
             loadedTitles = parsedTitles;
             countLabel.Text = parsedTitles.Count.ToString() + " titles loaded.";
-            foreach (Nintendo3DSRelease entry in parsedTitles)
-            {
-                if(entry.Type == "Unknown")
-                {
-                    entry.Type = Nintendo3DSRelease.GetTitleType(entry.TitleId);
-                }
-                string[] row = { entry.Name, entry.TitleId, entry.TitleKey, entry.Region, entry.SizeInMegabytes + "MB", entry.Type, entry.Publisher, entry.Serial };
-                var newEntry = new ListViewItem(row);
-                titleView.Items.Add(newEntry);
-            }
+            titleView.SetObjects(parsedTitles);
         }
 
         public static string Base64Encode(string plainText)
@@ -457,6 +452,7 @@ namespace DTK
         {
             titleView.Items.Clear();
             var searchTexts = searchBox.Text.ToLower().Split(' ');
+            List<Nintendo3DSRelease> foundTitles = new List<Nintendo3DSRelease>();
             foreach (Nintendo3DSRelease entry in loadedTitles)
             {
                 var searchCount = 0;
@@ -469,11 +465,10 @@ namespace DTK
                 }
                 if (searchCount >= searchTexts.Length)
                 {
-                    string[] row = { entry.Name, entry.TitleId, entry.TitleKey, entry.Region, entry.SizeInMegabytes + "MB", entry.Type, entry.Publisher, entry.Serial };
-                    var newEntry = new ListViewItem(row);
-                    titleView.Items.Add(newEntry);
+                    foundTitles.Add(entry);
                 }
             }
+            titleView.SetObjects(foundTitles);
             titleView.Refresh();
             titleView.Update();
         }
@@ -492,62 +487,6 @@ namespace DTK
         {
             DownloadKeyDatabase(loadedConfig.KeyDBUrl);
             LoadDB(loadedConfig.KeyDBPath, loadedConfig.KeyDBPath);
-        }
-
-        private void titleView_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            // Determine whether the column is the same as the last column clicked.
-            if (e.Column != sortColumn)
-            {
-                // Set the sort column to the new column.
-                sortColumn = e.Column;
-                // Set the sort order to ascending by default.
-                titleView.Sorting = SortOrder.Ascending;
-            }
-            else
-            {
-                // Determine what the last sort order was and change it.
-                if (titleView.Sorting == SortOrder.Ascending)
-                    titleView.Sorting = SortOrder.Descending;
-                else
-                    titleView.Sorting = SortOrder.Ascending;
-            }
-
-            // Call the sort method to manually sort.
-            titleView.Sort();
-            // Set the ListViewItemSorter property to a new ListViewItemComparer
-            // object.
-            titleView.ListViewItemSorter = new ListViewItemComparer(e.Column,
-                                                              titleView.Sorting);
-        }
-
-        public class ListViewItemComparer : IComparer
-        {
-            private int col;
-            private SortOrder order;
-            public ListViewItemComparer()
-            {
-                col = 0;
-                order = SortOrder.Ascending;
-            }
-            public ListViewItemComparer(int column, SortOrder order)
-            {
-                col = column;
-                this.order = order;
-            }
-            public int Compare(object x, object y)
-            {
-                int returnVal = -1;
-                returnVal = String.Compare(((ListViewItem)x).SubItems[col].Text,
-                                ((ListViewItem)y).SubItems[col].Text);
-                // Determine whether the sort order is descending.
-                if (order == SortOrder.Descending)
-                    // Invert the value returned by String.Compare.
-                    returnVal *= -1;
-                return returnVal;
-            }
-
-
         }
 
         private void renameButton_Click(object sender, EventArgs e)
@@ -583,7 +522,7 @@ namespace DTK
             MessageBox.Show("Sorted " + folderCount + " titles!");
         }
 
-        private void renameBar_Click(object sender, EventArgs e)
+        private void locationBox_TextChanged(object sender, EventArgs e)
         {
 
         }
