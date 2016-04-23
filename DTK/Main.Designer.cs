@@ -196,7 +196,7 @@ namespace DTK
             this.renameButton.Name = "renameButton";
             this.renameButton.Size = new System.Drawing.Size(80, 23);
             this.renameButton.TabIndex = 10;
-            this.renameButton.Text = "Rename CIAs";
+            this.renameButton.Text = "Sort CIAs";
             this.renameButton.UseVisualStyleBackColor = true;
             this.renameButton.Click += new System.EventHandler(this.renameButton_Click);
             // 
