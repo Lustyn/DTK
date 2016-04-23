@@ -6,11 +6,9 @@ Currently it only shows basic data needed from your encTitleKeys file but you ca
 ## Warning
 We aren't responsible if you use this for piracy. Use your own keys with this application.
 
-## Requirements
-* **python 2.7** - Required for running FunKeyCIA
-* **encTitleKeys** - From your console
-* **.NET Framework 4.5.2** - You should have this already
-* **Working Internet Connection** - *duh*
+## Branches
+* [**Windows**](https://github.com/justync7/DTK/tree/windows)
+* [**Linux**](https://github.com/justync7/DTK/tree/linux)
 
 ## Credits
 * **HouseBreaker** - [For its work we took without permission. Sorry.](https://github.com/HouseBreaker/NintendoCDN-TicketParser)
