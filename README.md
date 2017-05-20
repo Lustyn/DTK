@@ -1,4 +1,6 @@
-# DTK - DTK Takes Keys
+# PSA: DTK is no longer in development and I would recommend using CDN-FX or Shameless instead.
+
+## DTK - DTK Takes Keys
 DTK is an application that downloads games from Nintendo's CDN using [FunKeyCIA](http://gbatemp.net/threads/release-funkeycia-make-good-cias-from-eshop-content-no-tickets-needed.423025/).
 
 Currently it only shows basic data needed from your encTitleKeys file but you can already download using it.
